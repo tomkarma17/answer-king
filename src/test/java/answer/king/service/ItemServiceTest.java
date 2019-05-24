@@ -69,4 +69,16 @@ public class ItemServiceTest {
         assertTrue(ItemServiceTestUtils.areItemsEquivalent(updatedItem, returnedItem));
     }
 
+    @Test
+    public void testUpdatingItemCallsRepositorySaveMethodWithUpdatedItem() {
+        Item item = ItemServiceTestUtils.getItem();
+        itemService.save(item);
+
+        ArgumentCaptor<Item> itemArgumentCaptor = ArgumentCaptor.forClass(Item.class);
+        Item updatedItem = ItemServiceTestUtils.getUpdatedItem();
+        when(itemRepository.save(itemArgumentCaptor.capture())).thenReturn(null);
+        itemService.save(updatedItem);
+        assertEquals(updatedItem, itemArgumentCaptor.getValue());
+    }
+
 }
