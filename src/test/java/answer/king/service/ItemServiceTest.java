@@ -5,14 +5,16 @@ import answer.king.repo.ItemRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class ItemServiceTest {
@@ -36,7 +38,7 @@ public class ItemServiceTest {
     @Before
     public void setUp() {
         Item item = ItemServiceTestUtils.getItem();
-        Mockito.when(itemRepository.save(item)).thenReturn(item);
+        when(itemRepository.save(item)).thenReturn(item);
     }
 
     @Test
@@ -44,6 +46,15 @@ public class ItemServiceTest {
         Item item = ItemServiceTestUtils.getItem();
         Item returnedItem = itemService.save(item);
         assertTrue(ItemServiceTestUtils.areItemsEquivalent(item, returnedItem));
+    }
+
+    @Test
+    public void testCreateItemCallsRepositorySaveMethod() {
+        ArgumentCaptor<Item> itemArgumentCaptor = ArgumentCaptor.forClass(Item.class);
+        Item item = ItemServiceTestUtils.getItem();
+        when(itemRepository.save(itemArgumentCaptor.capture())).thenReturn(null);
+        itemService.save(item);
+        assertEquals(item, itemArgumentCaptor.getValue());
     }
 
 }
