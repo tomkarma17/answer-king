@@ -9,6 +9,7 @@ import java.util.Collections;
 final class ItemServiceTestUtils {
 
     private static final Item item;
+    private static final Item updatedItem;
 
     static {
         item = new Item();
@@ -21,10 +22,20 @@ final class ItemServiceTestUtils {
         order.setPaid(false);
         order.setItems(Collections.singletonList(item));
         item.setOrder(order);
+
+        updatedItem = new Item();
+        updatedItem.setId(item.getId());
+        updatedItem.setName(item.getName() + " - Updated name");
+        updatedItem.setPrice(item.getPrice());
+        updatedItem.setOrder(item.getOrder());
     }
 
     static Item getItem() {
         return item;
+    }
+
+    static Item getUpdatedItem() {
+        return updatedItem;
     }
 
     static boolean areItemsEquivalent(Item item1, Item item2) {

@@ -38,7 +38,9 @@ public class ItemServiceTest {
     @Before
     public void setUp() {
         Item item = ItemServiceTestUtils.getItem();
+        Item updatedItem = ItemServiceTestUtils.getUpdatedItem();
         when(itemRepository.save(item)).thenReturn(item);
+        when(itemRepository.save(updatedItem)).thenReturn(updatedItem);
     }
 
     @Test
@@ -55,6 +57,16 @@ public class ItemServiceTest {
         when(itemRepository.save(itemArgumentCaptor.capture())).thenReturn(null);
         itemService.save(item);
         assertEquals(item, itemArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void testUpdatingItemReturnsTheUpdatedItem() {
+        Item item = ItemServiceTestUtils.getItem();
+        itemService.save(item);
+
+        Item updatedItem = ItemServiceTestUtils.getUpdatedItem();
+        Item returnedItem = itemService.save(updatedItem);
+        assertTrue(ItemServiceTestUtils.areItemsEquivalent(updatedItem, returnedItem));
     }
 
 }
